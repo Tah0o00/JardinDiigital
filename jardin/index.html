@@ -1,0 +1,1439 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+
+<!-- Hace que la página se adapte correctamente al teléfono -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+<title>Jardín Digital</title>
+
+<style>
+/* =========================
+   ESTILOS GENERALES
+========================= */
+
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100%;
+    font-family: Arial, sans-serif;
+    background: #eef8ee;
+    color: #26352a;
+}
+
+body {
+    padding-bottom: 85px;
+}
+
+/* =========================
+   ENCABEZADO
+========================= */
+
+header {
+    text-align: center;
+    padding: 20px 15px 12px;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 28px;
+}
+
+header p {
+    margin: 7px 0 0;
+    color: #68766b;
+}
+
+/* =========================
+   CONTENEDOR
+========================= */
+
+main {
+    width: 100%;
+    max-width: 900px;
+    margin: auto;
+    padding: 0 12px;
+}
+
+.card {
+    background: white;
+    border: 1px solid #d7e5d8;
+    border-radius: 20px;
+    padding: 16px;
+    box-shadow: 0 5px 18px rgba(30, 70, 35, 0.08);
+}
+
+.card h2 {
+    margin-top: 0;
+}
+
+/* =========================
+   VISTAS
+========================= */
+
+.view {
+    display: none;
+}
+
+.view.active {
+    display: block;
+}
+
+/* =========================
+   HERRAMIENTAS
+========================= */
+
+.toolbar {
+    display: grid;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.tool-title {
+    display: block;
+    font-weight: bold;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+/* =========================
+   COLORES
+========================= */
+
+.colors {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+}
+
+.color {
+    width: 35px;
+    height: 35px;
+
+    border-radius: 50%;
+    border: 2px solid #999;
+
+    padding: 0;
+    cursor: pointer;
+
+    touch-action: manipulation;
+}
+
+.color.active {
+    outline: 3px solid #83ae88;
+    outline-offset: 2px;
+}
+
+/* =========================
+   DESLIZADORES
+========================= */
+
+.slider {
+    display: block;
+}
+
+.slider span {
+    display: block;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 6px;
+}
+
+input[type="range"] {
+    width: 100%;
+    accent-color: #4f8a55;
+}
+
+/* =========================
+   BOTONES
+========================= */
+
+button {
+    border: 1px solid #d5e2d6;
+    background: white;
+    color: #26352a;
+
+    border-radius: 12px;
+    padding: 11px 14px;
+
+    font-size: 14px;
+    font-weight: bold;
+
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+button:active {
+    transform: scale(0.97);
+}
+
+.buttons {
+    display: flex;
+    gap: 8px;
+}
+
+#eraser.active {
+    background: #eee1ff;
+    border-color: #ad83d5;
+}
+
+.primary {
+    width: 100%;
+
+    background: #4f8a55;
+    color: white;
+
+    border: none;
+
+    padding: 14px;
+    font-size: 16px;
+}
+
+/* =========================
+   LIENZO
+========================= */
+
+.canvas-wrap {
+    width: 100%;
+
+    background: white;
+
+    border: 2px dashed #b5ceb8;
+    border-radius: 16px;
+
+    overflow: hidden;
+
+    margin-bottom: 15px;
+}
+
+canvas {
+    display: block;
+
+    width: 100%;
+    height: 52vh;
+
+    min-height: 300px;
+    max-height: 600px;
+
+    background: white;
+
+    /*
+      MUY IMPORTANTE:
+      permite dibujar con el dedo
+      sin que el navegador desplace la página.
+    */
+    touch-action: none;
+}
+
+/* =========================
+   DATOS DE LA PLANTA
+========================= */
+
+.save-area {
+    display: grid;
+    gap: 10px;
+}
+
+input,
+textarea {
+    width: 100%;
+
+    border: 1px solid #cbd9cd;
+    border-radius: 12px;
+
+    padding: 12px;
+
+    font-family: Arial, sans-serif;
+    font-size: 15px;
+}
+
+textarea {
+    min-height: 75px;
+    resize: vertical;
+}
+
+/* =========================
+   INVERNADERO
+========================= */
+
+.plants {
+    display: grid;
+
+    grid-template-columns:
+        repeat(auto-fill, minmax(210px, 1fr));
+
+    gap: 15px;
+}
+
+.plant {
+    background: white;
+
+    border: 1px solid #d7e5d8;
+    border-radius: 16px;
+
+    overflow: hidden;
+}
+
+.plant img {
+    width: 100%;
+
+    aspect-ratio: 1 / 1;
+
+    object-fit: contain;
+
+    display: block;
+
+    background: white;
+}
+
+.plant-info {
+    padding: 12px;
+}
+
+.plant-info h3 {
+    margin: 0 0 6px;
+}
+
+.plant-info p {
+    margin: 0 0 10px;
+
+    color: #68766b;
+
+    font-size: 14px;
+}
+
+.delete {
+    width: 100%;
+
+    color: #a33131;
+
+    background: #fff7f7;
+
+    border-color: #edcaca;
+}
+
+.empty {
+    text-align: center;
+    color: #68766b;
+}
+
+/* =========================
+   MENÚ INFERIOR
+========================= */
+
+.bottom-nav {
+    position: fixed;
+
+    z-index: 20;
+
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    display: flex;
+
+    justify-content: center;
+
+    gap: 8px;
+
+    padding: 10px 10px
+        calc(10px + env(safe-area-inset-bottom));
+
+    background: rgba(255,255,255,0.97);
+
+    border-top: 1px solid #d7e5d8;
+
+    backdrop-filter: blur(8px);
+}
+
+.nav-btn {
+    min-width: 130px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    gap: 3px;
+
+    border: none;
+
+    background: transparent;
+}
+
+.nav-btn.active {
+    background: #e3f1e4;
+
+    color: #4f8a55;
+}
+
+/* =========================
+   CELULARES PEQUEÑOS
+========================= */
+
+@media (max-width: 420px) {
+
+    header {
+        padding-top: 14px;
+    }
+
+    header h1 {
+        font-size: 24px;
+    }
+
+    .card {
+        padding: 12px;
+        border-radius: 16px;
+    }
+
+    canvas {
+        height: 48vh;
+        min-height: 280px;
+    }
+
+    .bottom-nav {
+        justify-content: stretch;
+    }
+
+    .nav-btn {
+        flex: 1;
+        min-width: 0;
+    }
+}
+
+/* =========================
+   COMPUTADORA
+========================= */
+
+@media (min-width: 700px) {
+
+    .toolbar {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .buttons {
+        grid-column: 1 / -1;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- =========================
+     ENCABEZADO
+========================= -->
+
+<header>
+
+    <h1>🌱 Jardín Digital</h1>
+
+    <p>
+        Crea, guarda y cuida tus plantas.
+    </p>
+
+</header>
+
+
+<main>
+
+<!-- =====================================================
+     VISTA DEL JARDÍN
+===================================================== -->
+
+<section id="gardenView" class="view active">
+
+    <div class="card">
+
+        <h2>🎨 Crea tu planta</h2>
+
+
+        <!-- HERRAMIENTAS -->
+
+        <div class="toolbar">
+
+
+            <!-- COLORES -->
+
+            <div>
+
+                <span class="tool-title">
+                    Color
+                </span>
+
+                <div class="colors">
+
+                    <button
+                        class="color active"
+                        data-color="#111111"
+                        style="background:#111111;">
+                    </button>
+
+                    <button
+                        class="color"
+                        data-color="#e63946"
+                        style="background:#e63946;">
+                    </button>
+
+                    <button
+                        class="color"
+                        data-color="#f4a261"
+                        style="background:#f4a261;">
+                    </button>
+
+                    <button
+                        class="color"
+                        data-color="#f1c40f"
+                        style="background:#f1c40f;">
+                    </button>
+
+                    <button
+                        class="color"
+                        data-color="#2a9d8f"
+                        style="background:#2a9d8f;">
+                    </button>
+					<button
+                        class="color"
+                        data-color="#457b9d"
+                        style="background:#457b9d;">
+                    </button>
+
+                    <button
+                        class="color"
+                        data-color="#7b2cbf"
+                        style="background:#7b2cbf;">
+                    </button>
+
+                    <button
+                        class="color"
+                        data-color="#ffffff"
+                        style="background:#ffffff;">
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- GROSOR -->
+
+            <label class="slider">
+
+                <span>
+                    Grosor:
+                    <b id="sizeValue">8</b>
+                </span>
+
+                <input
+                    id="size"
+                    type="range"
+                    min="1"
+                    max="40"
+                    value="8">
+
+            </label>
+
+
+            <!-- OPACIDAD -->
+
+            <label class="slider">
+
+                <span>
+                    Opacidad:
+                    <b id="opacityValue">100%</b>
+                </span>
+
+                <input
+                    id="opacity"
+                    type="range"
+                    min="10"
+                    max="100"
+                    value="100">
+
+            </label>
+
+
+            <!-- BORRADOR / LIMPIAR -->
+
+            <div class="buttons">
+
+                <button id="eraser">
+                    🧽 Borrador
+                </button>
+
+                <button id="clear">
+                    🗑️ Limpiar
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- LIENZO -->
+
+        <div class="canvas-wrap">
+
+            <canvas id="canvas"></canvas>
+
+        </div>
+
+
+        <!-- GUARDAR -->
+
+        <div class="save-area">
+
+            <input
+                id="plantName"
+                maxlength="35"
+                placeholder="Nombre de tu planta">
+
+
+            <textarea
+                id="plantDescription"
+                maxlength="120"
+                placeholder="Descripción corta (opcional)">
+            </textarea>
+
+
+            <button
+                id="savePlant"
+                class="primary">
+
+                🌿 Guardar en Invernadero
+
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     INVERNADERO
+===================================================== -->
+
+<section id="greenhouseView" class="view">
+
+    <div class="card">
+
+        <h2>
+            🏡 Invernadero
+        </h2>
+
+        <p class="empty">
+
+            Aquí aparecen las plantas que guardaste.
+
+        </p>
+
+
+        <div
+            id="plants"
+            class="plants">
+        </div>
+
+
+        <p
+            id="empty"
+            class="empty">
+
+            Todavía no tienes plantas guardadas 🌱
+
+        </p>
+
+    </div>
+
+</section>
+
+</main>
+
+
+
+<!-- =====================================================
+     MENÚ INFERIOR
+===================================================== -->
+
+<nav class="bottom-nav">
+
+    <button
+        class="nav-btn active"
+        data-view="gardenView">
+
+        🌱
+
+        <span>
+            Jardín
+        </span>
+
+    </button>
+
+
+    <button
+        class="nav-btn"
+        data-view="greenhouseView">
+
+        🏡
+
+        <span>
+            Invernadero
+        </span>
+
+    </button>
+
+</nav>
+
+
+
+<script>
+
+/* =====================================================
+   VARIABLES
+===================================================== */
+
+const canvas =
+    document.getElementById("canvas");
+
+const ctx =
+    canvas.getContext("2d");
+
+
+let drawing = false;
+
+let color = "#111111";
+
+let size = 8;
+
+let opacity = 1;
+
+let eraser = false;
+
+let hasDrawing = false;
+
+
+/* =====================================================
+   CONFIGURAR LIENZO
+===================================================== */
+
+function setupCanvas() {
+
+    const rect =
+        canvas.getBoundingClientRect();
+
+    const ratio =
+        Math.max(
+            1,
+            window.devicePixelRatio || 1
+        );
+
+
+    canvas.width =
+        Math.round(rect.width * ratio);
+
+    canvas.height =
+        Math.round(rect.height * ratio);
+
+
+    ctx.setTransform(
+        ratio,
+        0,
+        0,
+        ratio,
+        0,
+        0
+    );
+
+
+    ctx.lineCap = "round";
+
+    ctx.lineJoin = "round";
+
+
+    ctx.fillStyle = "white";
+
+    ctx.fillRect(
+        0,
+        0,
+        rect.width,
+        rect.height
+    );
+}
+
+
+/* =====================================================
+   POSICIÓN DEL DEDO / MOUSE
+===================================================== */
+
+function position(e) {
+
+    const rect =
+        canvas.getBoundingClientRect();
+
+    return {
+
+        x: e.clientX - rect.left,
+
+        y: e.clientY - rect.top
+
+    };
+}
+
+
+/* =====================================================
+   COMENZAR A DIBUJAR
+===================================================== */
+
+function startDraw(e) {
+
+    e.preventDefault();
+
+    drawing = true;
+
+    hasDrawing = true;
+
+
+    if (canvas.setPointerCapture) {
+
+        canvas.setPointerCapture(
+            e.pointerId
+        );
+
+    }
+
+
+    const p =
+        position(e);
+
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        p.x,
+        p.y
+    );
+
+
+    draw(e);
+}
+
+
+/* =====================================================
+   DIBUJAR
+===================================================== */
+
+function draw(e) {
+
+    if (!drawing) return;
+
+    e.preventDefault();
+
+
+    const p =
+        position(e);
+
+
+    ctx.globalAlpha =
+        opacity;
+
+
+    ctx.lineWidth =
+        size;
+
+
+    if (eraser) {
+
+        ctx.strokeStyle =
+            "#ffffff";
+
+    } else {
+
+        ctx.strokeStyle =
+            color;
+
+    }
+
+
+    ctx.lineTo(
+        p.x,
+        p.y
+    );
+
+
+    ctx.stroke();
+
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        p.x,
+        p.y
+    );
+}
+
+
+/* =====================================================
+   TERMINAR TRAZO
+===================================================== */
+
+function stopDraw(e) {
+
+    if (!drawing) return;
+
+    drawing = false;
+
+
+    ctx.beginPath();
+
+    ctx.globalAlpha = 1;
+
+
+    if (
+        e &&
+        e.pointerId !== undefined
+    ) {
+
+        try {
+
+            canvas.releasePointerCapture(
+                e.pointerId
+            );
+
+        } catch (_) {}
+
+    }
+}
+
+
+/* =====================================================
+   EVENTOS DEL LIENZO
+===================================================== */
+
+canvas.addEventListener(
+    "pointerdown",
+    startDraw
+);
+
+canvas.addEventListener(
+    "pointermove",
+    draw
+);
+
+canvas.addEventListener(
+    "pointerup",
+    stopDraw
+);
+
+canvas.addEventListener(
+    "pointercancel",
+    stopDraw
+);
+
+canvas.addEventListener(
+    "pointerleave",
+    stopDraw
+);
+
+
+/* =====================================================
+   SELECCIONAR COLOR
+===================================================== */
+
+document
+.querySelectorAll(".color")
+.forEach(button => {
+
+    button.addEventListener(
+        "click",
+        () => {
+
+            color =
+                button.dataset.color;
+
+
+            eraser = false;
+
+
+            document
+            .getElementById("eraser")
+            .classList
+            .remove("active");
+
+
+            document
+            .querySelectorAll(".color")
+            .forEach(b => {
+
+                b.classList
+                .remove("active");
+
+            });
+
+
+            button
+            .classList
+            .add("active");
+
+        }
+    );
+
+});
+
+
+/* =====================================================
+   GROSOR
+===================================================== */
+
+document
+.getElementById("size")
+.addEventListener(
+    "input",
+    e => {
+	size =
+            Number(e.target.value);
+
+
+        document
+        .getElementById("sizeValue")
+        .textContent =
+            size;
+
+    }
+);
+
+
+/* =====================================================
+   OPACIDAD
+===================================================== */
+
+document
+.getElementById("opacity")
+.addEventListener(
+    "input",
+    e => {
+
+        opacity =
+            Number(e.target.value) / 100;
+
+
+        document
+        .getElementById("opacityValue")
+        .textContent =
+            e.target.value + "%";
+
+    }
+);
+
+
+/* =====================================================
+   BORRADOR
+===================================================== */
+
+document
+.getElementById("eraser")
+.addEventListener(
+    "click",
+    () => {
+
+        eraser =
+            !eraser;
+
+
+        document
+        .getElementById("eraser")
+        .classList
+        .toggle(
+            "active",
+            eraser
+        );
+
+    }
+);
+
+
+/* =====================================================
+   LIMPIAR LIENZO
+===================================================== */
+
+document
+.getElementById("clear")
+.addEventListener(
+    "click",
+    () => {
+
+        clearCanvas();
+
+    }
+);
+
+
+function clearCanvas() {
+
+    const rect =
+        canvas.getBoundingClientRect();
+
+
+    ctx.globalAlpha = 1;
+
+    ctx.fillStyle =
+        "white";
+
+
+    ctx.fillRect(
+        0,
+        0,
+        rect.width,
+        rect.height
+    );
+
+
+    hasDrawing = false;
+}
+
+
+/* =====================================================
+   PLANTAS GUARDADAS
+===================================================== */
+
+function getPlants() {
+
+    try {
+
+        return JSON.parse(
+            localStorage.getItem(
+                "jardinDigitalPlants"
+            ) || "[]"
+        );
+
+    } catch {
+
+        return [];
+
+    }
+}
+
+
+function savePlants(plants) {
+
+    localStorage.setItem(
+        "jardinDigitalPlants",
+        JSON.stringify(plants)
+    );
+
+}
+
+
+/* =====================================================
+   GUARDAR PLANTA
+===================================================== */
+
+document
+.getElementById("savePlant")
+.addEventListener(
+    "click",
+    () => {
+
+        const nameInput =
+            document.getElementById(
+                "plantName"
+            );
+
+
+        const descriptionInput =
+            document.getElementById(
+                "plantDescription"
+            );
+
+
+        const name =
+            nameInput.value.trim();
+
+
+        if (!hasDrawing) {
+
+            alert(
+                "Primero dibuja tu planta 🌱"
+            );
+
+            return;
+        }
+
+
+        if (!name) {
+
+            alert(
+                "Ponle un nombre a tu planta 💚"
+            );
+
+            nameInput.focus();
+
+            return;
+        }
+
+
+        const plants =
+            getPlants();
+
+
+        plants.unshift({
+
+            id: Date.now(),
+
+            name: name,
+
+            description:
+                descriptionInput
+                .value
+                .trim(),
+
+            image:
+                canvas.toDataURL(
+                    "image/png"
+                )
+
+        });
+
+
+        savePlants(plants);
+
+
+        renderPlants();
+
+
+        nameInput.value = "";
+
+        descriptionInput.value = "";
+
+
+        clearCanvas();
+
+
+        showView(
+            "greenhouseView"
+        );
+
+    }
+);
+
+
+/* =====================================================
+   MOSTRAR PLANTAS
+===================================================== */
+
+function renderPlants() {
+
+    const container =
+        document.getElementById("plants");
+
+    const empty =
+        document.getElementById("empty");
+
+    const plants =
+        getPlants();
+
+    container.innerHTML = "";
+
+
+    if (plants.length > 0) {
+
+        empty.style.display = "none";
+
+    } else {
+
+        empty.style.display = "block";
+
+    }
+
+
+    plants.forEach(plant => {
+
+        const article =
+            document.createElement("article");
+
+        article.className = "plant";
+
+
+        article.innerHTML = `
+
+            <img
+                src="${plant.image}"
+                alt="Dibujo de planta">
+
+            <div class="plant-info">
+
+                <h3>
+                    ${escapeHtml(plant.name)}
+                </h3>
+
+                <p>
+                    ${escapeHtml(
+                        plant.description ||
+                        "Sin descripción."
+                    )}
+                </p>
+
+                <button
+                    class="delete"
+                    data-id="${plant.id}">
+
+                    🗑️ Eliminar planta
+
+                </button>
+
+            </div>
+
+        `;
+
+
+        container.appendChild(article);
+
+    });
+
+
+    document
+    .querySelectorAll(".delete")
+    .forEach(button => {
+
+        button.addEventListener(
+            "click",
+            () => {
+
+                const id =
+                    Number(
+                        button.dataset.id
+                    );
+
+
+                if (
+                    confirm(
+                        "¿Quieres eliminar esta planta?"
+                    )
+                ) {
+
+                    const remainingPlants =
+                        getPlants().filter(
+                            plant =>
+                                plant.id !== id
+                        );
+
+
+                    savePlants(
+                        remainingPlants
+                    );
+
+
+                    renderPlants();
+
+                }
+
+            }
+        );
+
+    });
+
+}
+
+
+/* =====================================================
+   SEGURIDAD PARA EL TEXTO
+===================================================== */
+
+function escapeHtml(text) {
+
+    const div =
+        document.createElement("div");
+
+
+    div.textContent =
+        text;
+
+
+    return div.innerHTML;
+}
+
+
+/* =====================================================
+   CAMBIAR ENTRE JARDÍN E INVERNADERO
+===================================================== */
+
+function showView(id) {
+
+    document
+    .querySelectorAll(".view")
+    .forEach(view => {
+
+        view.classList.remove("active");
+
+    });
+
+
+    document
+    .getElementById(id)
+    .classList.add("active");
+
+
+    document
+    .querySelectorAll(".nav-btn")
+    .forEach(button => {
+
+        button.classList.toggle(
+            "active",
+            button.dataset.view === id
+        );
+
+    });
+
+
+    if (id === "gardenView") {
+
+        setTimeout(
+            setupCanvas,
+            20
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   BOTONES DE NAVEGACIÓN
+===================================================== */
+
+document
+.querySelectorAll(".nav-btn")
+.forEach(button => {
+
+    button.addEventListener(
+        "click",
+        () => {
+
+            showView(
+                button.dataset.view
+            );
+
+        }
+    );
+
+});
+
+
+/* =====================================================
+   INICIAR LA APP
+===================================================== */
+
+setupCanvas();
+
+renderPlants();
+
+</script>
+
+</body>
+</html>
